@@ -4,6 +4,12 @@ import commonConfig, { mergeConfig } from './base';
 
 module.exports = merge(commonConfig, {
   mode: 'development',
+  // @ts-ignore
+  devServer: {
+    proxy: {
+      "/api": "http://localhost:4000"
+    }
+  },
   plugins: [
     new webpack.DefinePlugin({
       process: {

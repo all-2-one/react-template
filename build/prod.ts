@@ -1,6 +1,7 @@
 import { merge } from 'webpack-merge';
 import * as webpack from 'webpack';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import CompressionPlugin from 'compression-webpack-plugin';
 import commonConfig, { mergeConfig } from './base';
 
 interface Env {
@@ -16,7 +17,10 @@ module.exports = (env: Env) => {
       minimize: true
     },
     plugins: [
-      ...(env.analyze === '1' ? [new BundleAnalyzerPlugin()] : []),
+      ...(env.analyze === '1' ? [
+        new BundleAnalyzerPlugin()]
+        : []
+      ),
       new webpack.DefinePlugin({
         process: {
           env: JSON.stringify({
@@ -24,7 +28,8 @@ module.exports = (env: Env) => {
             ...prodEnvConfig
           })
         }
-      } as any)
+      } as any),
+      new CompressionPlugin({}) as any,
     ]
   });
 };
