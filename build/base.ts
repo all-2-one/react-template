@@ -3,6 +3,7 @@ import 'webpack-dev-server';
 import * as webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import fs from 'fs';
+import CopyPlugin from 'copy-webpack-plugin';
 
 const config: webpack.Configuration = {
   entry: path.resolve(__dirname, '..', 'src', 'main.tsx'),
@@ -53,6 +54,19 @@ const config: webpack.Configuration = {
     new HtmlWebpackPlugin({
       title: '网页',
       template: path.resolve(__dirname, '..', 'public', 'index.html')
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "public/**/*",
+          filter: (resourcePath) => (
+            !(resourcePath.indexOf('index.html') > -1)
+          ),
+          to({ context, absoluteFilename }) {
+            return `${path.relative(context, absoluteFilename)}`.replace('public/', '');
+          },
+        }
+      ]
     })
   ],
   optimization: {
@@ -70,6 +84,8 @@ const config: webpack.Configuration = {
         },
       },
     },
+    runtimeChunk: true,
+    usedExports: true,
   },
   //@ts-ignore
   devServer: {
