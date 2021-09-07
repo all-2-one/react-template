@@ -45,6 +45,7 @@ tsconfig.json
   - [x] 支持嵌套
   - [x] 在App.tsx支持原生的写法
   - [x] 懒加载
+  - [ ] 子页面没有history,location,match等路由数据
 - [ ] react-redux(main.tsx)
   - [x] 支持saga
   - [x] 支持原生和dva-model的写法

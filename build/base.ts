@@ -2,6 +2,7 @@ import * as path from 'path';
 import 'webpack-dev-server';
 import * as webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import fs from 'fs';
 
 const config: webpack.Configuration = {
   entry: path.resolve(__dirname, '..', 'src', 'main.tsx'),
@@ -77,3 +78,29 @@ const config: webpack.Configuration = {
 };
 
 export default config;
+
+const getConfig = (fileName: string) => {
+  const content = fs.readFileSync(path.resolve(__dirname, '..', fileName), 'utf-8');
+  return content.split('\n').filter(item => item).reduce((obj, str) => {
+    let [key, value] = str.split('=');
+    if (!key) {
+      return obj;
+    }
+
+    value = value.trimEnd();
+    return ({
+      ...obj,
+      [key]: value
+    });
+  }, {});
+};
+
+export const mergeConfig = (mode: string = 'dev') => (
+  ['.env', '.env.local', `.env.${mode}`, `.env.${mode}.local`].reduce((obj, filename) => {
+    const config = getConfig(filename);
+    return {
+      ...obj,
+      ...config
+    };
+  }, {})
+);

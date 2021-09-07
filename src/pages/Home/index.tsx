@@ -8,6 +8,7 @@ import actionMap from '../../store/global/createAction';
 function Home() {
   const { loading } = useSelector(({ global }: ConnectState) => global);
   const dispatch = useDispatch();
+  console.log(process.env);
 
   return (
     <div>
