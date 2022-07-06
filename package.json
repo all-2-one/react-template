@@ -81,7 +81,7 @@
     }
   },
   "lint-staged": {
-    "**/*.js": "eslint"
+    "src/**": "eslint"
   },
   "sideEffects": false
 }
