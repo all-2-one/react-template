@@ -1,4 +1,4 @@
 #!/bin/sh
 
-yarn run eslint
+npm run eslint
 
