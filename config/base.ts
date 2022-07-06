@@ -1,10 +1,12 @@
 import * as path from 'path'
+import * as fs from 'fs'
 import * as webpack from 'webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
 import MiniCssExtractPlugin from "mini-css-extract-plugin"
 import ESLintPlugin from 'eslint-webpack-plugin'
 import { VueLoaderPlugin } from 'vue-loader'
+import 'webpack-dev-server'
 
 const baseConfig: webpack.Configuration = {
     entry: {
@@ -124,3 +126,29 @@ const baseConfig: webpack.Configuration = {
 }
 
 export default baseConfig
+
+export const getEnv = (mode: string) => {
+    const arr = ['.env', `.env.${mode}`, `.env.${mode}.local`]
+    const envMap: Record<string, string | number> = {}
+
+    arr.forEach(filename => {
+        try {
+            const fileContent = fs.readFileSync(path.resolve(__dirname, '..', filename), { encoding: 'utf-8' })
+            if (!fileContent) {
+                return
+            }
+            fileContent.split('\n').forEach(item => {
+                if (!item.includes('=')) {
+                    return
+                }
+                const [key, _value] = item.split('=')
+                const value = _value.trim()
+                envMap[key.trim()] = /\d/.test(value) ? Number(value) : value
+            })
+        } catch (e) {
+            // keep
+        }
+    })
+
+    return envMap
+}
