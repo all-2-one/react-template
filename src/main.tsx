@@ -1,9 +1,9 @@
-import { createRoot } from 'react-dom/client'
-import React from 'react'
-import App from './App'
+import core from './core'
+import models from './models'
+import routes from './router'
 
-const container = document.getElementById('root')!
-const root = createRoot(container)
+const app = core()
+app.router(routes)
+app.model(models)
 
-root.render(<App />)
-
+app.start('#root')

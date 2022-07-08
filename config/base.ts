@@ -17,12 +17,14 @@ const baseConfig: webpack.Configuration = {
         path: path.resolve(__dirname, '..', 'dist'),
         // 如果文件内容不改, 生成文件名不变
         filename: '[name].[contenthash].js',
+        publicPath: '/',
         clean: true,
         chunkFilename: '[id].[contenthash].js',
     },
     devServer: {
         static: './dist',
         hot: true,
+        historyApiFallback: true,
     },
     module: {
         rules: [
