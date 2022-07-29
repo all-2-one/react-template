@@ -2,35 +2,34 @@ import { createRoot } from 'react-dom/client'
 import React from 'react'
 import { Provider } from 'react-redux'
 
-import { IModel, IRoute } from "./type"
-import Router from './Router'
+import { IModel } from "./type"
 import getStore from './store'
+import { prefixModelNamespace } from './prefixModelNamespace'
 
 class App {
-    private _routes: IRoute[] = []
-
     private _models: IModel<Record<string, unknown>>[] = []
+    private _router?: () => React.ReactNode
 
     public start(element: string | HTMLElement) {
+        const store = getStore(this._models)
+
         const container = typeof element === 'string'
             ? document.querySelector(element)!
             : element
         const root = createRoot(container)
-        const store = getStore(this._models)
-
         root.render(
             <Provider store={store}>
-                <Router routes={this._routes} />
+                {this._router?.()}
             </Provider>
         )
     }
 
-    public router(routes: IRoute[]) {
-        this._routes = routes
+    public router(router: () => React.ReactNode) {
+        this._router = router
     }
 
-    public model(models: IModel<any>[]) {
-        this._models = models
+    public models(models: IModel<any>[]) {
+        this._models = models.map(prefixModelNamespace)
     }
 }
 

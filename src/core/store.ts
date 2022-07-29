@@ -1,24 +1,11 @@
-import { legacy_createStore as createStore, combineReducers, applyMiddleware, compose } from "redux"
-import { IAction, IModel } from "./type"
+import { legacy_createStore as createStore, applyMiddleware, compose } from "redux"
+import createSagaMiddleware from 'redux-saga'
+import { getRootReducers } from "./getRootReducers"
+import { getSagas } from "./getRootSaga"
+import { IModel } from "./type"
 
-const getStore = (models: IModel<any>[]) => {
-    const reducers = models.reduce((prevReducer, model) => ({
-        ...prevReducer,
-        [model.namespace]: (modelState = model.state, action: IAction) => {
-            const actionType = action.type.replace(
-                new RegExp(`${model.namespace}/`),
-                ''
-            )
-
-            const reducer = model.reducers[actionType]
-
-            if (!reducer) {
-                return modelState
-            }
-
-            return reducer(modelState, action) || modelState
-        }
-    }), {})
+const getStore = (models: IModel[]) => {
+    const rootReducer = getRootReducers(models)
 
     const composeEnhancers =
         typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -26,12 +13,16 @@ const getStore = (models: IModel<any>[]) => {
             })
             : compose;
 
-
+    const sagaMiddleware = createSagaMiddleware()
     const enhancer = composeEnhancers(
-        applyMiddleware()
+        applyMiddleware(sagaMiddleware)
     );
 
-    return createStore(combineReducers(reducers), enhancer)
+    const store = createStore(rootReducer, enhancer)
+    const sagas = getSagas(models)
+    sagas.forEach(sagaMiddleware.run)
+
+    return store
 }
 
 export default getStore

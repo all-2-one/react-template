@@ -2,9 +2,9 @@ import * as webpack from 'webpack'
 import merge from 'webpack-merge'
 
 import baseConfig, { getEnv } from "./config/base"
+
 import development from "./config/dev"
 import production from "./config/prod"
-
 import test from "./config/test"
 
 const configMap: Record<string, webpack.Configuration> = {

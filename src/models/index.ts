@@ -2,7 +2,7 @@ import globalModel, { GlobalState } from "./global";
 
 const models = [globalModel]
 
-export interface Model {
+export interface ModelState {
     global: GlobalState
 }
 

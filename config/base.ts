@@ -11,7 +11,7 @@ import 'webpack-dev-server'
 const baseConfig: webpack.Configuration = {
     entry: {
         index: './src/main.tsx',
-        login: './src/login.ts'
+        // login: './src/login.ts'
     },
     output: {
         path: path.resolve(__dirname, '..', 'dist'),
@@ -140,7 +140,7 @@ export const getEnv = (mode: string) => {
                 return
             }
             fileContent.split('\n').forEach(item => {
-                if (!item.includes('=')) {
+                if (!item || !item.includes('=') || item.startsWith('#')) {
                     return
                 }
                 const [key, _value] = item.split('=')

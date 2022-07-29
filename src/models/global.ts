@@ -18,6 +18,12 @@ const globalModel: IModel<GlobalState> = {
                 token: payload
             }
         }
+    },
+    effects: {
+        * asyncSetToken(action, { call, put, delay }) {
+            yield call(delay, 1000)
+            yield put({ type: 'setToken', payload: action.payload })
+        }
     }
 }
 
