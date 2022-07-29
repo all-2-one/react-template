@@ -15,7 +15,8 @@
     "eslint": "eslint src --ext .ts,.tsx",
     "test": "jest",
     "lint-staged": "lint-staged",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "git config core.hooksPath hooks && chmod 700 .husky/*"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",
