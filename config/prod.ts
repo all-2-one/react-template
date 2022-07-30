@@ -10,7 +10,10 @@ const prod: webpack.Configuration = {
     },
     plugins: [
         // 打包结果分析
-        new BundleAnalyzerPlugin()
+        new webpack.BannerPlugin({
+            banner: '版权'
+        }),
+        new BundleAnalyzerPlugin(),
     ]
 }
 

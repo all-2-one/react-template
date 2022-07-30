@@ -6,6 +6,9 @@ import CopyPlugin from 'copy-webpack-plugin'
 import MiniCssExtractPlugin from "mini-css-extract-plugin"
 import ESLintPlugin from 'eslint-webpack-plugin'
 import { VueLoaderPlugin } from 'vue-loader'
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin"
+import TerserPlugin from 'terser-webpack-plugin'
+
 import 'webpack-dev-server'
 
 const baseConfig: webpack.Configuration = {
@@ -59,13 +62,13 @@ const baseConfig: webpack.Configuration = {
             },
             {
                 test: /\.m?js$/,
-                exclude: /(node_modules|bower_components)/,
-                use: 'babel-loader'
+                exclude: /node_modules/,
+                use: 'babel-loader?cacheDirectory'
             },
             {
                 test: /\.tsx?$/,
                 use: [
-                    'babel-loader',
+                    'babel-loader?cacheDirectory',
                     'ts-loader'
                 ],
                 exclude: /node_modules/,
@@ -108,6 +111,11 @@ const baseConfig: webpack.Configuration = {
         runtimeChunk: 'single',
         usedExports: true,
         sideEffects: true,
+        minimizer: [
+            new TerserPlugin({}),
+            new CssMinimizerPlugin()
+        ],
+        minimize: true,
         splitChunks: {
             chunks: 'async',
             minSize: 20000,
